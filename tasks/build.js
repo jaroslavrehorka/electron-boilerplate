@@ -6,6 +6,7 @@ var gulp = require('gulp');
 var rollup = require('rollup');
 var less = require('gulp-less');
 var jetpack = require('fs-jetpack');
+var ts = require('gulp-typescript');
 
 var utils = require('./utils');
 var generateSpecsImportFile = require('./generate_specs_import');
@@ -16,7 +17,7 @@ var destDir = projectDir.cwd('./build');
 
 var paths = {
     copyFromAppDir: [
-        './node_modules/**',
+        './jspm_packages/**',
         './vendor/**',
         './**/*.html',
         './**/*.+(jpg|png|svg)'
@@ -74,6 +75,7 @@ var bundleApplication = function () {
     return Q.all([
         bundle(srcDir.path('background.js'), destDir.path('background.js')),
         bundle(srcDir.path('app.js'), destDir.path('app.js')),
+        bundle(srcDir.path('config.js'), destDir.path('config.js')),
     ]);
 };
 
@@ -129,6 +131,14 @@ gulp.task('finalize', ['clean'], function () {
     destDir.write('package.json', manifest);
 });
 
+gulp.task('typescript', function () {
+	return gulp.src('src/**/*.ts')
+		.pipe(ts({
+			noImplicitAny: true,
+			out: 'output.js'
+		}))
+		.pipe(gulp.dest('built/local'));
+});
 
 gulp.task('watch', function () {
     gulp.watch('app/**/*.js', ['bundle-watch']);
