@@ -8,6 +8,7 @@ System.config({
   },
 
   map: {
+    "electron": "github:jaroslavrehorka/electron-jspm@0.1.1",
     "fs-jetpack": "npm:fs-jetpack@0.7.1",
     "jonschlinkert/fs-utils": "github:jonschlinkert/fs-utils@0.6.5",
     "os": "github:jspm/nodelibs-os@0.1.0",
@@ -41,9 +42,6 @@ System.config({
     },
     "github:jspm/nodelibs-string_decoder@0.1.0": {
       "string_decoder": "npm:string_decoder@0.10.31"
-    },
-    "github:jspm/nodelibs-tty@0.1.0": {
-      "tty-browserify": "npm:tty-browserify@0.0.0"
     },
     "github:jspm/nodelibs-util@0.1.0": {
       "util": "npm:util@0.10.3"
@@ -180,11 +178,6 @@ System.config({
       "miller-rabin": "npm:miller-rabin@4.0.0",
       "randombytes": "npm:randombytes@2.0.1",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
-    },
-    "npm:drip@1.1.0": {
-      "events": "github:jspm/nodelibs-events@0.1.1",
-      "process": "github:jspm/nodelibs-process@0.1.2",
-      "tea-concat": "npm:tea-concat@0.1.0"
     },
     "npm:elliptic@6.0.2": {
       "bn.js": "npm:bn.js@4.6.2",
@@ -337,9 +330,6 @@ System.config({
     },
     "npm:string_decoder@0.10.31": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0"
-    },
-    "npm:tea-concat@0.1.0": {
-      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:util@0.10.3": {
       "inherits": "npm:inherits@2.0.1",

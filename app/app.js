@@ -4,10 +4,11 @@
 // Use new ES6 modules syntax for everything.
 import os from 'os'; // native node.js module
 import jetpack from 'fs-jetpack'; // module loaded from npm
-import remote from 'electron';
+import { remote } from 'electron';
 import { greet } from './hello_world/hello_world'; // code authored by you in this project
 import env from './env';
 
+console.log(ipc);
 console.log('Loaded environment variables:', env);
 
 var app = remote.app;

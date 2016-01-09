@@ -1,12 +1,13 @@
 // Simple module exposes environment variables to rest of the code.
 
 import jetpack from 'fs-jetpack';
+import * as electron from 'electron';
 
 var app;
 if (process.type === 'renderer') {
-    app = require('electron').remote.app;
+    app = electron.remote.app;
 } else {
-    app = require('electron').app;
+    app = electron.app;
 }
 var appDir = jetpack.cwd(app.getAppPath());
 
