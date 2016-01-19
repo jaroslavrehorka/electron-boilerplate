@@ -8,7 +8,6 @@ import { remote } from 'electron';
 import { greet } from './hello_world/hello_world'; // code authored by you in this project
 import env from './env';
 
-console.log(ipc);
 console.log('Loaded environment variables:', env);
 
 var app = remote.app;
@@ -18,8 +17,6 @@ var appDir = jetpack.cwd(app.getAppPath());
 // here files like it is node.js! Welcome to Electron world :)
 console.log('The author of this app is:', appDir.read('package.json', 'json').author);
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('greet').innerHTML = greet();
-    document.getElementById('platform-info').innerHTML = os.platform();
-    document.getElementById('env-name').innerHTML = env.name;
-});
+document.getElementById('greet').innerHTML = greet();
+document.getElementById('platform-info').innerHTML = os.platform();
+document.getElementById('env-name').innerHTML = env.name;
