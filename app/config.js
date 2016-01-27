@@ -10,6 +10,7 @@ System.config({
   map: {
     "electron": "github:jaroslavrehorka/electron-jspm@0.1.1",
     "fs-jetpack": "npm:fs-jetpack@0.7.1",
+    "jaroslavrehorka/electron-jspm": "github:jaroslavrehorka/electron-jspm@0.1.1",
     "jonschlinkert/fs-utils": "github:jonschlinkert/fs-utils@0.6.5",
     "os": "github:jspm/nodelibs-os@0.1.0",
     "typescript": "npm:typescript@1.7.5",
