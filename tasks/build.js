@@ -19,6 +19,9 @@ var paths = {
     copyFromAppDir: [
         './node_modules/**',
         './jspm_packages/**',
+        './app/**',
+        'env.js',
+        'tsconfig.json',
         './vendor/**',
         './**/*.html',
         './**/*.+(jpg|png|svg)'
@@ -30,7 +33,7 @@ var paths = {
 // -------------------------------------
 
 gulp.task('clean', function (callback) {
-    return destDir.dirAsync('.', { empty: true });
+    return destDir.dirAsync('.', {empty: true});
 });
 
 
@@ -101,8 +104,8 @@ gulp.task('bundle-watch', bundleTask);
 
 var lessTask = function () {
     return gulp.src('app/stylesheets/main.less')
-    .pipe(less())
-    .pipe(gulp.dest(destDir.path('stylesheets')));
+        .pipe(less())
+        .pipe(gulp.dest(destDir.path('stylesheets')));
 };
 gulp.task('less', ['clean'], lessTask);
 gulp.task('less-watch', lessTask);
@@ -133,17 +136,17 @@ gulp.task('finalize', ['clean'], function () {
 });
 
 gulp.task('typescript', function () {
-	return gulp.src('src/**/*.ts')
-		.pipe(ts({
-			noImplicitAny: true,
-			out: 'output.js'
-		}))
-		.pipe(gulp.dest('built/local'));
+    return gulp.src('src/**/*.ts')
+        .pipe(ts({
+            noImplicitAny: true,
+            out: 'output.js'
+        }))
+        .pipe(gulp.dest('built/local'));
 });
 
 gulp.task('watch', function () {
     gulp.watch('app/**/*.js', ['bundle-watch']);
-    gulp.watch(paths.copyFromAppDir, { cwd: 'app' }, ['copy-watch']);
+    gulp.watch(paths.copyFromAppDir, {cwd: 'app'}, ['copy-watch']);
     gulp.watch('app/**/*.less', ['less-watch']);
 });
 

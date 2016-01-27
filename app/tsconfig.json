@@ -1,24 +1,22 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"module": "system",
-		"moduleResolution": "node",
-		"isolatedModules": false,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"declaration": false,
-		"noImplicitAny": false,
-		"removeComments": true,
-		"noLib": false,
-		"preserveConstEnums": true
-	},
-	"filesGlob": [
-		"**/*.ts",
-		"**/*.tsx",
-		"!jspm_packages/**"
-	],
-	"exclude": [],
-	"atom": {
-		"rewriteTsconfig": false
-	}
+  "compilerOptions": {
+    "target": "es5",
+    "module": "system",
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false,
+    "preserveConstEnums": true
+  },
+  "filesGlob": [
+    "**/*.ts",
+    "**/*.tsx",
+    "!jspm_packages/**",
+    "!node_modules/**"
+  ],
+  "exclude": []
 }
