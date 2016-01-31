@@ -19,7 +19,7 @@ var paths = {
     copyFromAppDir: [
         './node_modules/**',
         './jspm_packages/**',
-        './app/**',
+        './src/**',
         'env.js',
         'tsconfig.json',
         './vendor/**',
