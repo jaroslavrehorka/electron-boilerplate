@@ -20,6 +20,7 @@
     }
   },
   "dependencies": {
-    "fs-jetpack": "^0.7.1"
+    "fs-jetpack": "^0.7.1",
+    "karma-jspm": "^2.0.2"
   }
 }

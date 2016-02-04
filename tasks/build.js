@@ -25,8 +25,8 @@ var paths = {
         './vendor/**',
         './**/*.html',
         './**/*.+(jpg|png|svg)'
-    ],
-}
+    ]
+};
 
 // -------------------------------------
 // Tasks
@@ -51,20 +51,20 @@ var bundle = function (src, dest) {
     var deferred = Q.defer();
 
     rollup.rollup({
-        entry: src,
+        entry: src
     }).then(function (bundle) {
         var jsFile = pathUtil.basename(dest);
         var result = bundle.generate({
             format: 'cjs',
             sourceMap: true,
-            sourceMapFile: jsFile,
+            sourceMapFile: jsFile
         });
         // Wrap code in self invoking function so the variables don't
         // pollute the global namespace.
         var isolatedCode = '(function () {' + result.code + '\n}());';
         return Q.all([
             destDir.writeAsync(dest, isolatedCode + '\n//# sourceMappingURL=' + jsFile + '.map'),
-            destDir.writeAsync(dest + '.map', result.map.toString()),
+            destDir.writeAsync(dest + '.map', result.map.toString())
         ]);
     }).then(function () {
         deferred.resolve();
@@ -78,7 +78,7 @@ var bundle = function (src, dest) {
 var bundleApplication = function () {
     return Q.all([
         bundle(srcDir.path('background.js'), destDir.path('background.js')),
-        bundle(srcDir.path('config.js'), destDir.path('config.js')),
+        bundle(srcDir.path('config.js'), destDir.path('config.js'))
     ]);
 };
 
@@ -86,7 +86,7 @@ var bundleSpecs = function () {
     generateSpecsImportFile().then(function (specEntryPointPath) {
         return Q.all([
             bundle(srcDir.path('background.js'), destDir.path('background.js')),
-            bundle(specEntryPointPath, destDir.path('spec.js')),
+            bundle(specEntryPointPath, destDir.path('spec.js'))
         ]);
     });
 };
@@ -119,10 +119,6 @@ gulp.task('finalize', ['clean'], function () {
         case 'development':
             manifest.name += '-dev';
             manifest.productName += ' Dev';
-            break;
-        case 'test':
-            manifest.name += '-test';
-            manifest.productName += ' Test';
             break;
     }
 
