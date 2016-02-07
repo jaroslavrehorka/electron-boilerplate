@@ -4,15 +4,19 @@ var pathUtil = require('path');
 var Q = require('q');
 var gulp = require('gulp');
 var rollup = require('rollup');
-var less = require('gulp-less');
+var sass = require('gulp-sass');
 var jetpack = require('fs-jetpack');
-var ts = require('gulp-typescript');
+var exec = require('child_process').exec;
 
 var utils = require('./utils');
 
 var projectDir = jetpack;
-var srcDir = projectDir.cwd('./app');
-var destDir = projectDir.cwd('./build');
+
+const APP_DIR = './app';
+const BUILD_DIR = './build';
+
+var srcDir = projectDir.cwd(APP_DIR);
+var destDir = projectDir.cwd(BUILD_DIR);
 
 var paths = {
     copyFromAppDir: [
@@ -24,6 +28,13 @@ var paths = {
         './**/*.+(jpg|png|svg)',
         'tsconfig.json',
         'config.js'
+    ],
+    copyFromAppDirRelease: [
+        './node_modules/**',
+        './vendor/**',
+        'app.release.html',
+        './**/*.+(jpg|png|svg)'
+
     ]
 };
 
@@ -42,7 +53,14 @@ var copyTask = () => {
         matching: paths.copyFromAppDir
     });
 };
+var copyReleaseTask = () => {
+    return projectDir.copyAsync('app', destDir.path(), {
+        overwrite: true,
+        matching: paths.copyFromAppDirRelease
+    });
+};
 gulp.task('copy', ['clean'], copyTask);
+gulp.task('copy-release', ['clean'], copyReleaseTask);
 gulp.task('copy-watch', copyTask);
 
 
@@ -83,13 +101,19 @@ gulp.task('bundle', ['clean'], bundleTask);
 gulp.task('bundle-watch', bundleTask);
 
 
-var lessTask = () => {
-    return gulp.src('app/stylesheets/main.less')
-        .pipe(less())
-        .pipe(gulp.dest(destDir.path('stylesheets')));
+var sassTask = function () {
+    return gulp.src(APP_DIR + '/app.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest(BUILD_DIR));
 };
-gulp.task('less', ['clean'], lessTask);
-gulp.task('less-watch', lessTask);
+var sassReleaseTask = function () {
+    return gulp.src(APP_DIR + '/app.scss')
+        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(gulp.dest(BUILD_DIR));
+};
+gulp.task('sass', ['clean'], sassTask);
+gulp.task('sass-release', ['clean'], sassReleaseTask);
+gulp.task('sass-watch', sassTask);
 
 
 gulp.task('finalize', ['clean'], () => {
@@ -112,20 +136,22 @@ gulp.task('finalize', ['clean'], () => {
     destDir.write('package.json', manifest);
 });
 
-gulp.task('typescript', () => {
-    return gulp.src('background.ts')
-        .pipe(ts({
-            noImplicitAny: true,
-            out: 'output.js'
-        }))
-        .pipe(gulp.dest('built'));
+gulp.task('bundle-jspm', (cb) => {
+
+    return exec('cd ' + srcDir.path() + ' && jspm bundle-sfx src ' + destDir.path() + '/app.js',
+        (err, stdout, stderr) => {
+            console.log(stdout);
+            console.log(stderr);
+            cb(err);
+        });
 });
 
 gulp.task('watch', () => {
     gulp.watch('app/**/*.js', ['bundle-watch']);
     gulp.watch(paths.copyFromAppDir, {cwd: 'app'}, ['copy-watch']);
-    gulp.watch('app/**/*.less', ['less-watch']);
+    gulp.watch('app/renderer/**/*.scss', ['sass-wath']);
 });
 
 
-gulp.task('build', ['bundle', 'less', 'copy', 'finalize']);
+gulp.task('build', ['bundle', 'sass', 'copy', 'finalize']);
+gulp.task('build-release', ['bundle', 'bundle-jspm', 'sass-release', 'copy-release', 'finalize']);

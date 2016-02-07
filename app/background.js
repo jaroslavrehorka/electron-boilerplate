@@ -32,11 +32,13 @@ app.on('ready', () => {
         mainWindow.maximize();
     }
 
-    mainWindow.loadURL('file://' + __dirname + '/app.html');
-
     if (env.name !== 'production') {
+        mainWindow.loadURL('file://' + __dirname + '/app.html');
+
         devHelper.setDevMenu();
         mainWindow.openDevTools();
+    } else {
+        mainWindow.loadURL('file://' + __dirname + '/app.release.html');
     }
 
     mainWindow.on('close', () => {

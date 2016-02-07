@@ -21,5 +21,8 @@
   },
   "dependencies": {
     "fs-jetpack": "^0.7.1"
+  },
+  "devDependencies": {
+    "gulp-exec": "^2.1.2"
   }
 }
