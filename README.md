@@ -1,4 +1,4 @@
-electron-boilerplate with jspm support and typescript
+electron-boilerplate with jspm, typescript and sass support
 ==============
 Fork of great https://github.com/szwacz/electron-boilerplate
 
