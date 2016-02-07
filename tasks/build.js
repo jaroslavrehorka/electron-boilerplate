@@ -9,7 +9,6 @@ var jetpack = require('fs-jetpack');
 var ts = require('gulp-typescript');
 
 var utils = require('./utils');
-var generateSpecsImportFile = require('./generate_specs_import');
 
 var projectDir = jetpack;
 var srcDir = projectDir.cwd('./app');
@@ -20,11 +19,11 @@ var paths = {
         './node_modules/**',
         './jspm_packages/**',
         './src/**',
-        'env.js',
-        'tsconfig.json',
         './vendor/**',
         './**/*.html',
-        './**/*.+(jpg|png|svg)'
+        './**/*.+(jpg|png|svg)',
+        'tsconfig.json',
+        'config.js'
     ]
 };
 
@@ -32,12 +31,12 @@ var paths = {
 // Tasks
 // -------------------------------------
 
-gulp.task('clean', function (callback) {
+gulp.task('clean', () => {
     return destDir.dirAsync('.', {empty: true});
 });
 
 
-var copyTask = function () {
+var copyTask = () => {
     return projectDir.copyAsync('app', destDir.path(), {
         overwrite: true,
         matching: paths.copyFromAppDir
@@ -47,12 +46,12 @@ gulp.task('copy', ['clean'], copyTask);
 gulp.task('copy-watch', copyTask);
 
 
-var bundle = function (src, dest) {
+var bundle = (src, dest) => {
     var deferred = Q.defer();
 
     rollup.rollup({
         entry: src
-    }).then(function (bundle) {
+    }).then((bundle) => {
         var jsFile = pathUtil.basename(dest);
         var result = bundle.generate({
             format: 'cjs',
@@ -66,42 +65,25 @@ var bundle = function (src, dest) {
             destDir.writeAsync(dest, isolatedCode + '\n//# sourceMappingURL=' + jsFile + '.map'),
             destDir.writeAsync(dest + '.map', result.map.toString())
         ]);
-    }).then(function () {
+    }).then(() => {
         deferred.resolve();
-    }).catch(function (err) {
+    }).catch((err) => {
         console.error('Build: Error during rollup', err.stack);
     });
 
     return deferred.promise;
 };
 
-var bundleApplication = function () {
+var bundleTask = () => {
     return Q.all([
-        bundle(srcDir.path('background.js'), destDir.path('background.js')),
-        bundle(srcDir.path('config.js'), destDir.path('config.js'))
+        bundle(srcDir.path('background.js'), destDir.path('background.js'))
     ]);
-};
-
-var bundleSpecs = function () {
-    generateSpecsImportFile().then(function (specEntryPointPath) {
-        return Q.all([
-            bundle(srcDir.path('background.js'), destDir.path('background.js')),
-            bundle(specEntryPointPath, destDir.path('spec.js'))
-        ]);
-    });
-};
-
-var bundleTask = function () {
-    if (utils.getEnvName() === 'test') {
-        return bundleSpecs();
-    }
-    return bundleApplication();
 };
 gulp.task('bundle', ['clean'], bundleTask);
 gulp.task('bundle-watch', bundleTask);
 
 
-var lessTask = function () {
+var lessTask = () => {
     return gulp.src('app/stylesheets/main.less')
         .pipe(less())
         .pipe(gulp.dest(destDir.path('stylesheets')));
@@ -110,7 +92,7 @@ gulp.task('less', ['clean'], lessTask);
 gulp.task('less-watch', lessTask);
 
 
-gulp.task('finalize', ['clean'], function () {
+gulp.task('finalize', ['clean'], () => {
     var manifest = srcDir.read('package.json', 'json');
 
     // Add "dev" or "test" suffix to name, so Electron will write all data
@@ -130,16 +112,16 @@ gulp.task('finalize', ['clean'], function () {
     destDir.write('package.json', manifest);
 });
 
-gulp.task('typescript', function () {
-    return gulp.src('src/**/*.ts')
+gulp.task('typescript', () => {
+    return gulp.src('background.ts')
         .pipe(ts({
             noImplicitAny: true,
             out: 'output.js'
         }))
-        .pipe(gulp.dest('built/local'));
+        .pipe(gulp.dest('built'));
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', () => {
     gulp.watch('app/**/*.js', ['bundle-watch']);
     gulp.watch(paths.copyFromAppDir, {cwd: 'app'}, ['copy-watch']);
     gulp.watch('app/**/*.less', ['less-watch']);

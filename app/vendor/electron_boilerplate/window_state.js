@@ -8,12 +8,12 @@ import jetpack from 'fs-jetpack';
 export default function (name, defaults) {
 
     var userDataDir = jetpack.cwd(app.getPath('userData'));
-    var stateStoreFile = 'window-state-' + name +'.json';
+    var stateStoreFile = 'window-state-' + name + '.json';
 
     var state = userDataDir.read(stateStoreFile, 'json') || {
-        width: defaults.width,
-        height: defaults.height
-    };
+            width: defaults.width,
+            height: defaults.height
+        };
 
     var saveState = function (win) {
         if (!win.isMaximized() && !win.isMinimized()) {
@@ -25,15 +25,25 @@ export default function (name, defaults) {
             state.height = size[1];
         }
         state.isMaximized = win.isMaximized();
-        userDataDir.write(stateStoreFile, state, { atomic: true });
+        userDataDir.write(stateStoreFile, state, {atomic: true});
     };
 
     return {
-        get x() { return state.x; },
-        get y() { return state.y; },
-        get width() { return state.width; },
-        get height() { return state.height; },
-        get isMaximized() { return state.isMaximized; },
+        get x() {
+            return state.x;
+        },
+        get y() {
+            return state.y;
+        },
+        get width() {
+            return state.width;
+        },
+        get height() {
+            return state.height;
+        },
+        get isMaximized() {
+            return state.isMaximized;
+        },
         saveState: saveState
     };
 }

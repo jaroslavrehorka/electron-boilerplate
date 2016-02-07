@@ -19,7 +19,7 @@ var mainWindowState = windowStateKeeper('main', {
     height: 600
 });
 
-app.on('ready', function () {
+app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
         x: mainWindowState.x,
@@ -39,11 +39,11 @@ app.on('ready', function () {
         mainWindow.openDevTools();
     }
 
-    mainWindow.on('close', function () {
+    mainWindow.on('close', () => {
         mainWindowState.saveState(mainWindow);
     });
 });
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
     app.quit();
 });
